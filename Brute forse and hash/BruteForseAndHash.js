@@ -35,19 +35,9 @@ function calculateHashRC(string)
     return hash;
 }
 
-var fso = new ActiveXObject('Scripting.FileSystemObject');
-var file = fso.OpenTextFile('string.txt');
-var string = file.ReadAll();
-file.Close();
-
-var fso = new ActiveXObject('Scripting.FileSystemObject');
-var file = fso.OpenTextFile('substring.txt');
-var substring = file.ReadAll();
-file.Close();
-
 var result = [];
-var substringHash = calculateHash(substring);
-var stringHash = calculateHash(string.substr(0, substring.length));
+var substringHash = calculateHashRC(substring);
+var stringHash = calculateHashRC(string.substr(0, substring.length));
 var start = (new Date()).getTime();
 var collisionCount = 0;
 
@@ -74,7 +64,7 @@ collisionCount = result.length - collisionCount;
 var end = (new Date()).getTime();
 if (result.length == 0)
     WSH.stdOut.WriteLine('Substring not found');
-else WSH.stdOut.WriteLine(result);
+else WSH.stdOut.WriteLine('Rabin-Carp. Position: ' + result);
 WSH.stdOut.WriteLine('Collisions: ' + collisionCount);
 
 //Code sum
@@ -118,7 +108,7 @@ if (result.length == 0)
 else WSH.stdOut.WriteLine('Sum of code. Position: ' + result);
 WSH.stdOut.WriteLine('Collisions: ' + collisionCount);
 
-//Code sqr
+//Code sqr sum
 function calculateHashSQR(string) 
 {
     var hash = 0;
