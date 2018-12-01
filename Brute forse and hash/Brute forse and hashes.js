@@ -1,11 +1,13 @@
-//Brute Forse
 var fso = new ActiveXObject('Scripting.FileSystemObject');
 var file = fso.OpenTextFile('string.txt');
 var string = file.ReadAll();
 file.Close();
 
+WSH.StdOut.Write('Enter substring: ')
 var substring = WSH.StdIn.ReadLine();
 
+//Brute Forse
+WSH.echo('Brute forse');
 var result = [];
 var start = (new Date()).getTime();
 
@@ -23,18 +25,20 @@ for (var i = 0; i <= string.length - substring.length; i++)
 
 var end = (new Date()).getTime();
 if (result.length == 0)
-    WSH.stdOut.WriteLine('Substring not found');
-else WSH.stdOut.WriteLine('Brute Forse. Position: ' + result);
+    WSH.echo('Substring not found');
+else WSH.echo('Position: ' + result);
+WSH.echo();
 
 //Rabin-Carp
 function calculateHashRC(string) 
 {
     var hash = 0;
     for (var i = 0; i < string.length; i++)
-        hash += (1 << string.charCodeAt(i));
+        hash += string.charCodeAt(i) * (1 << (string.length - i));
     return hash;
 }
 
+WSH.echo('Rabin-Carp');
 var result = [];
 var substringHash = calculateHashRC(substring);
 var stringHash = calculateHashRC(string.substr(0, substring.length));
@@ -45,10 +49,15 @@ for (var i = 0; i <= string.length - substring.length; i++)
 {
     if (substringHash == stringHash) 
     {
-        result.push(i);
         for (var j = 0; string.charAt(i + j) == substring.charAt(j); j++) 
         {
             if (j == substring.length - 1) 
+            {
+                result.push(i);
+                break;
+            }
+            
+            else 
             {
                 collisionCount++;
                 break;
@@ -56,16 +65,16 @@ for (var i = 0; i <= string.length - substring.length; i++)
         }
     }
 
-    stringHash = stringHash - (1 << string.charCodeAt(i))
-                            + (1 << string.charCodeAt(i + substring.length));
+    stringHash = 2 * (stringHash - string.charCodeAt(i) * (1 << substring.length)
+                            + string.charCodeAt(i + substring.length));
 }
 
-collisionCount = result.length - collisionCount;
 var end = (new Date()).getTime();
 if (result.length == 0)
-    WSH.stdOut.WriteLine('Substring not found');
-else WSH.stdOut.WriteLine('Rabin-Carp. Position: ' + result);
-WSH.stdOut.WriteLine('Collisions: ' + collisionCount);
+    WSH.echo('Substring not found');
+else WSH.echo('Position: ' + result);
+WSH.echo('Collisions: ' + collisionCount);
+WSH.echo();
 
 //Code sum
 function calculateHashSum(string) 
@@ -76,6 +85,7 @@ function calculateHashSum(string)
     return hash;
 }
 
+WSH.echo('Sum of code');
 var result = [];
 var substringHash = calculateHashSum(substring);
 var stringHash = calculateHashSum(string.substr(0, substring.length));
@@ -86,10 +96,15 @@ for (var i = 0; i <= string.length - substring.length; i++)
 {
     if (substringHash == stringHash) 
     {
-        result.push(i);
         for (var j = 0; string.charAt(i + j) == substring.charAt(j); j++) 
         {
             if (j == substring.length - 1) 
+            {
+                result.push(i);
+                break;
+            }
+            
+            else 
             {
                 collisionCount++;
                 break;
@@ -101,12 +116,12 @@ for (var i = 0; i <= string.length - substring.length; i++)
                             + string.charCodeAt(i + substring.length);
 }
 
-collisionCount = result.length - collisionCount;
 var end = (new Date()).getTime();
 if (result.length == 0)
-    WSH.stdOut.WriteLine('Substring not found');
-else WSH.stdOut.WriteLine('Sum of code. Position: ' + result);
-WSH.stdOut.WriteLine('Collisions: ' + collisionCount);
+    WSH.echo('Substring not found');
+else WSH.echo('Position: ' + result);
+WSH.echo('Collisions: ' + collisionCount);
+WSH.echo();
 
 //Code sqr sum
 function calculateHashSQR(string) 
@@ -117,6 +132,7 @@ function calculateHashSQR(string)
     return hash;
 }
 
+WSH.echo('Sum of code square');
 var result = [];
 var substringHash = calculateHashSQR(substring);
 var stringHash = calculateHashSQR(string.substr(0, substring.length));
@@ -127,10 +143,15 @@ for (var i = 0; i <= string.length - substring.length; i++)
 {
     if (substringHash == stringHash) 
     {
-        result.push(i);
         for (var j = 0; string.charAt(i + j) == substring.charAt(j); j++) 
         {
             if (j == substring.length - 1) 
+            {
+                result.push(i);
+                break;
+            }
+            
+            else 
             {
                 collisionCount++;
                 break;
@@ -142,9 +163,8 @@ for (var i = 0; i <= string.length - substring.length; i++)
                             + (string.charCodeAt(i + substring.length) << 1);
 }
 
-collisionCount = result.length - collisionCount;
 var end = (new Date()).getTime();
 if (result.length == 0)
-    WSH.stdOut.WriteLine('Substring not found');
-else WSH.stdOut.WriteLine('Sum of code square. Position: ' + result);
-WSH.stdOut.WriteLine('Collisions: ' + collisionCount);
+    WSH.echo('Substring not found');
+else WSH.echo('Position: ' + result);
+WSH.echo('Collisions: ' + collisionCount);
