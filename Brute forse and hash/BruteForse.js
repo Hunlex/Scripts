@@ -3,8 +3,10 @@ var file = fso.OpenTextFile('string.txt');
 var string = file.ReadAll();
 file.Close();
 
+WSH.StdOut.Write('Enter substring: ')
 var substring = WSH.StdIn.ReadLine();
 
+WSH.echo('Brute forse');
 var result = [];
 var start = (new Date()).getTime();
 
@@ -22,5 +24,5 @@ for (var i = 0; i <= string.length - substring.length; i++)
 
 var end = (new Date()).getTime();
 if (result.length == 0)
-    WSH.stdOut.WriteLine('Substring not found');
-else WSH.stdOut.WriteLine('Brute Forse. Position: ' + result);
+    WSH.echo('Substring not found');
+else WSH.echo('Position: ' + result);
