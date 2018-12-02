@@ -9,7 +9,7 @@ var result  = [];
 var entry = [];
 for(var k = 0; k < substring.length; k++) 
 {
-    entry[substring.charAt(k)] = k;
+    entry[substring.charAt(k)] = k + 1;
 }
 
 for (var i = substring.length - 1; i < string.length; i++) 
@@ -23,16 +23,16 @@ for (var i = substring.length - 1; i < string.length; i++)
         }
     }
 
-    if (j !== substring.length - 1) 
+    if (j != substring.length - 1) 
     {
         if (!entry[string.charAt(i - j)])
         {
-            i += substring.length - 1 - j;
+            i += substring.length - 1;
         }
 
         else 
         {
-            i += Math.max(0, substring.length - entry[string.charAt(i - j)] - j - 2);
+            i += Math.max(1, substring.length - 1 - entry[string.charAt(i - j)] - j);
         }
     }
 }
