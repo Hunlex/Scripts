@@ -6,20 +6,12 @@ function calculateHashSQR(string)
     return hash;
 }
 
-var fso = new ActiveXObject('Scripting.FileSystemObject');
-var file = fso.OpenTextFile('string.txt');
-var string = file.ReadAll();
-file.Close();
-
-WSH.StdOut.Write('Enter substring: ')
-var substring = WSH.StdIn.ReadLine();
-
-WSH.echo('Sum of code square');
 var result = [];
 var substringHash = calculateHashSQR(substring);
 var stringHash = calculateHashSQR(string.substr(0, substring.length));
 var start = (new Date()).getTime();
 var collisionCount = 0;
+var fl = 0;
 
 for (var i = 0; i <= string.length - substring.length; i++) 
 {
@@ -30,14 +22,16 @@ for (var i = 0; i <= string.length - substring.length; i++)
             if (j == substring.length - 1) 
             {
                 result.push(i);
+                fl = 1;
                 break;
             }
-            
-            else 
-            {
-                collisionCount++;
-                break;
-            }
+        }
+        
+
+        if (fl == 1)
+        {
+            collisionCount++;
+            fl = 0;
         }
     }
 
@@ -45,6 +39,7 @@ for (var i = 0; i <= string.length - substring.length; i++)
                             + (string.charCodeAt(i + substring.length) << 1);
 }
 
+collisionCount -= result.length; 
 var end = (new Date()).getTime();
 if (result.length == 0)
     WSH.echo('Substring not found');
