@@ -6,7 +6,6 @@ file.Close();
 WSH.StdOut.Write('Enter substring: ')
 var substring = WSH.StdIn.ReadLine();
 
-WSH.echo('Brute forse');
 var result = [];
 var start = (new Date()).getTime();
 
