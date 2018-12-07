@@ -40,7 +40,7 @@ for (var k = 1; k < originalTreeLength; k++)
     var frequency1 = string.length;
     var num1 = 0;
     for (var i = 0; i < tree.length; i++)
-        if ((tree[i].frequency < frequency1) && (tree[i].used == false))
+        if ((tree[i].frequency < frequency1) && !(tree[i].used))
         {
             frequency1 = tree[i].frequency;
             num1 = i;
@@ -53,7 +53,7 @@ for (var k = 1; k < originalTreeLength; k++)
     var frequency2 = string.length;
     var num2 = 0;
     for (var i = 0; i < tree.length; i++)
-        if ((tree[i].frequency < frequency2) && (tree[i].used == false))
+        if ((tree[i].frequency < frequency2) && !(tree[i].used))
         {
             frequency2 = tree[i].frequency;
             num2 = i;
