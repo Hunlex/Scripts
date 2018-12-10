@@ -1,0 +1,107 @@
+<html>
+	<head>
+		<title>Hamming &lt;3</title>
+		  <style>
+   			body 
+			{
+    			background: url(image.jpeg) no-repeat;
+    			background-size: 100%; /* Современные браузеры */
+   			}
+  		</style>
+	</head>
+	<body  ="#7FFFD4" text="#87CEEB"  align="center">
+		<h1>Hello, I encode and decode your message.</h1>
+		<label for="originalString">Input your binary string</label>
+		<br/>
+		<input maxlength=4 type="edit" id="originalString" onkeypress="Filter();" />
+		<input onclick="encode()" type="button" value="Encode" />
+		<br/>
+		<label for="encodedString">Encoded string. Change it!</label>
+		<br/>
+		<input maxlength=7 type="edit" id="encodedString" onkeypress="Filter();" />
+		<input onclick="decode()" type="button" value="Decode" />
+		<br/>
+		<label for="decodedString">Decoded string</label>
+		<br/>
+		<input type="edit" id="decodedString" readonly/>
+		<input onclick="reloadPage()" type="button"  value=" Again! " />
+		<script>
+			function encode() 
+			{
+				var readString = document.getElementById("originalString");
+				var binaryString = readString.value.split('');
+				if (binaryString.length != 4)
+				{
+					alert('Oops, i need more 0 or 1');
+					return;
+				}
+				var binaryCode = [];
+				binaryCode[3] = parseInt(binaryString[0]);
+				binaryCode[5] = parseInt(binaryString[1]);
+				binaryCode[6] = parseInt(binaryString[2]);
+				binaryCode[7] = parseInt(binaryString[3]);
+				binaryCode[1] = (binaryCode[3] + binaryCode[5] + binaryCode[7]) % 2;
+				binaryCode[2] = (binaryCode[3] + binaryCode[6] + binaryCode[7]) % 2;
+				binaryCode[4] = (binaryCode[5] + binaryCode[6] + binaryCode[7]) % 2;
+				encodedString.value = binaryCode.join('');
+			}
+
+			function decode() 
+			{
+				var encodedString = document.getElementById("encodedString");
+				var binaryString = encodedString.value.split('');
+				if (binaryString.length != 7)
+				{
+					alert('Sorry, but you lose 0 or 1');
+					return;
+				}
+				var binaryCode = [];
+				for (var i = 0; i < 7; i++)
+					binaryCode[i + 1] = parseInt(binaryString[i]);
+				var errors = [];
+				errors[0] = (binaryCode[1] + binaryCode[2] + binaryCode[3] + binaryCode[4] + 
+							 				 binaryCode[5] + binaryCode[6] + binaryCode[7]) % 2;
+				errors[1] = (binaryCode[4] + binaryCode[5] + binaryCode[6] + binaryCode[7]) % 2;
+				errors[2] = (binaryCode[2] + binaryCode[3] + binaryCode[6] + binaryCode[7]) % 2;
+				errors[3] = (binaryCode[1] + binaryCode[3] + binaryCode[5] + binaryCode[7]) % 2;
+				var bitWithError = 0;
+				for (var i = 0; i < 4; i++)
+					if (errors[i] == 1)
+						bitWithError += (1 << (3 - i));
+				if (bitWithError == 8)
+					alert('Wow, your message haven\'t errors');
+
+				else if (bitWithError < 8)
+				{
+					binaryCode[bitWithError] = (binaryCode[bitWithError] + 1) % 2;
+					alert('Oh, i find and fixed one error in your message in ' + bitWithError + ' bytes');
+				}
+
+				else 
+				{
+					alert('Sorry, but your message have too much errors:(');
+					return;
+				}
+				
+				var resultString = [];
+				resultString[0] = binaryCode[3];
+				resultString[1] = binaryCode[5];
+				resultString[2] = binaryCode[6];
+				resultString[3] = binaryCode[7];
+				decodedString.value = resultString.join("");
+					
+			}
+
+			function Filter()
+			{
+				var filter = "01";
+				window.event.returnValue = (filter.indexOf(String.fromCharCode(window.event.keyCode)) != -1);
+			}
+
+			function reloadPage()
+			{
+				window.location.reload()
+			}
+		</script>
+	</body>
+</html>
