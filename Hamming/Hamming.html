@@ -60,16 +60,14 @@
 				for (var i = 0; i < 7; i++)
 					binaryCode[i + 1] = parseInt(binaryString[i]);
 				var errors = [];
-				errors[0] = (binaryCode[1] + binaryCode[2] + binaryCode[3] + binaryCode[4] + 
-							 				 binaryCode[5] + binaryCode[6] + binaryCode[7]) % 2;
-				errors[1] = (binaryCode[4] + binaryCode[5] + binaryCode[6] + binaryCode[7]) % 2;
-				errors[2] = (binaryCode[2] + binaryCode[3] + binaryCode[6] + binaryCode[7]) % 2;
-				errors[3] = (binaryCode[1] + binaryCode[3] + binaryCode[5] + binaryCode[7]) % 2;
+				errors[1] = (binaryCode[3] + binaryCode[5] + binaryCode[7]) % 2;
+				errors[2] = (binaryCode[3] + binaryCode[6] + binaryCode[7]) % 2;
+				errors[4] = (binaryCode[5] + binaryCode[6] + binaryCode[7]) % 2;
 				var bitWithError = 0;
-				for (var i = 0; i < 4; i++)
-					if (errors[i] == 1)
-						bitWithError += (1 << (3 - i));
-				if (bitWithError == 8)
+				for (var i = 1; i < 5; i++)
+					if (i != 3 && errors[i] != binaryCode[i])
+						bitWithError += i;
+				if (bitWithError == 8 )
 					alert('Wow, your message haven\'t errors');
 
 				else if (bitWithError < 8)
@@ -101,7 +99,7 @@
 
 			function reloadPage()
 			{
-				window.location.reload()
+				window.location.reload();
 			}
 		</script>
 	</body>
