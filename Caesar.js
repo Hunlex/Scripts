@@ -1,4 +1,3 @@
-//Encode
 WSH.echo('Do you want enter message yourself?')
 var answer = WSH.StdIn.ReadLine();
 var realText = '';
@@ -30,11 +29,13 @@ if (isNaN(shift))
 	WSH.Quit();
 }
 
-shift = shift % 94;
+shift %= 94;
+if (shift < 0)
+	shift += 94;
 var code = "";
 for (var i = 0; i < realText.length; i++)
 {
-	if (realText.charCodeAt(i) >= 31 && realText.charCodeAt(i) <= 126)
+	if (realText.charCodeAt(i) >= 32 && realText.charCodeAt(i) <= 126)
 	{
 		if (realText.charCodeAt(i) + shift > 126)
 			code += String.fromCharCode(realText.charCodeAt(i) + shift - 94);
@@ -44,7 +45,6 @@ for (var i = 0; i < realText.length; i++)
 }
 var fileAccess = new ActiveXObject('Scripting.FileSystemObject');
 var outputFile = fileAccess.CreateTextFile('codedText.txt');
-outputFile.writeline('Encode text: ');
 outputFile.writeline(code);
 outputFile.Close();
 WSH.echo('Encode text: ');
@@ -57,17 +57,17 @@ var text = inputFile.ReadAll();
 inputFile.Close();
 var independentFrequency = [];
 var charCount = 0;
-for (var i = 0; i < 1000; i++)
+for (var i = 0; i < 10000; i++)
 	independentFrequency[i] = 0;
 for (var i = 0; i < text.length; i++)
 {
-	if (text.charCodeAt(i) >= 97 && text.charCodeAt(i) <= 122)
+	if (text.charCodeAt(i) >= 32 && text.charCodeAt(i) <= 126)
 	{
 		independentFrequency[text.charCodeAt(i)]++;
 		charCount++;
 	}
 }
-for (var i = 0; i < 1000; i++)
+for (var i = 0; i < independentFrequency.length; i++)
 	independentFrequency[i] = independentFrequency[i] / charCount;
 
 //Create table of frequency from coded text
@@ -77,20 +77,20 @@ var text = inputFile.ReadAll();
 inputFile.Close();
 var codedFrequency = [];
 var charCount = 0;
-for (var i = 0; i < 1000; i++)
+for (var i = 0; i < 10000; i++)
 	codedFrequency[i] = 0;
 for (var i = 0; i < text.length; i++)
 {
-	if (text.charCodeAt(i) >= 97 && text.charCodeAt(i) <= 122)
+	if (text.charCodeAt(i) >= 32 && text.charCodeAt(i) <= 126)
 	{
 		codedFrequency[text.charCodeAt(i)]++;
 		charCount++;
 	}
 }
-for (var i = 0; i < 1000; i++)
+for (var i = 0; i < independentFrequency.length; i++)
 	codedFrequency[i] = codedFrequency[i] / charCount;
 
-//Encode
+//Decode
 var finalShift = 0; 
 var minMagicSum = Number.MAX_VALUE;
 var magicSum = 0;
@@ -99,18 +99,18 @@ for (var possibleShift = 0; possibleShift < 94; possibleShift++)
 	magicSum = 0;
 	for (var i = 0; i < text.length; i++)
 	{
-		if (text.charCodeAt(i) >= 31 && text.charCodeAt(i) <= 126)
+		if (text.charCodeAt(i) >= 32 && text.charCodeAt(i) <= 126)
 		{
-			if (text.charCodeAt(i) - possibleShift < 31)
+			if (text.charCodeAt(i) - possibleShift < 32)	
 			{
-				magicSum += Math.abs(codedFrequency[text.charCodeAt(i) - possibleShift + 94 + 31] 
-							 - independentFrequency[text.charCodeAt(i) + 31]);
+				magicSum += Math.pow((independentFrequency[text.charCodeAt(i)] - 
+							codedFrequency[text.charCodeAt(i) - possibleShift + 94]), 2);
 			}
 
 			else
 			{
-				magicSum += Math.abs(codedFrequency[text.charCodeAt(i) - possibleShift + 31]
-							 - independentFrequency[text.charCodeAt(i) + 31]);
+				magicSum += Math.pow((independentFrequency[text.charCodeAt(i)] - 
+							codedFrequency[text.charCodeAt(i) - possibleShift]), 2);
 			}
 		}
 	}
@@ -126,9 +126,9 @@ finalShift = 94 - finalShift;
 var decode = "";
 for (var i = 0; i < text.length; i++)
 {
-	if (text.charCodeAt(i) >= 31 && text.charCodeAt(i) <= 126)
+	if (text.charCodeAt(i) >= 32 && text.charCodeAt(i) <= 126)
 	{
-		if (text.charCodeAt(i) - finalShift < 31)
+		if (text.charCodeAt(i) - finalShift < 32)
 			decode += String.fromCharCode(text.charCodeAt(i) - finalShift + 94);
 		else
 			decode += String.fromCharCode(text.charCodeAt(i) - finalShift);
@@ -144,9 +144,3 @@ outputFile.Close();
 WSH.echo ("I think that shift has been " + finalShift);
 WSH.echo('Decoded text: ');
 WSH.echo(decode);
-
-if (shift != finalShift)
-	WSH.echo('I failed this task');
-else
-	WSH.echo('Successful decode!')
-
