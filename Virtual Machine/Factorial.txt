@@ -1,0 +1,15 @@
+Read 201
+If 201 > 169
+End
+If 0 > 201
+End
+Put 202 1
+Put 203 1
+Put 204 0
+If 201 < 202
+Jmp 12
+Mul 203 203 202
+Add 202 202 1
+Jmp -14
+Write 203
+End
