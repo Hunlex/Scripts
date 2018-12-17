@@ -27,6 +27,7 @@
 		<input type="edit" id="decodedString" readonly/>
 		<input onclick="reloadPage()" type="button"  value=" Again! " />
 		<script>
+			var parity;
 			function encode() 
 			{
 				var readString = document.getElementById("originalString");
@@ -45,10 +46,13 @@
 				binaryCode[2] = (binaryCode[3] + binaryCode[6] + binaryCode[7]) % 2;
 				binaryCode[4] = (binaryCode[5] + binaryCode[6] + binaryCode[7]) % 2;
 				encodedString.value = binaryCode.join('');
+				parity = (binaryCode[1] + binaryCode[2] + binaryCode[3] + binaryCode[4] + 
+						 binaryCode[5] + binaryCode[6] + binaryCode[7]) % 2;
 			}
 
 			function decode() 
 			{
+				var thisParity = 0;
 				var encodedString = document.getElementById("encodedString");
 				var binaryString = encodedString.value.split('');
 				if (binaryString.length != 7)
@@ -58,11 +62,16 @@
 				}
 				var binaryCode = [];
 				for (var i = 0; i < 7; i++)
+				{
 					binaryCode[i + 1] = parseInt(binaryString[i]);
+					thisParity += binaryCode[i + 1]
+				}
+				thisParity %= 2;
 				var errors = [];
 				errors[1] = (binaryCode[3] + binaryCode[5] + binaryCode[7]) % 2;
 				errors[2] = (binaryCode[3] + binaryCode[6] + binaryCode[7]) % 2;
 				errors[4] = (binaryCode[5] + binaryCode[6] + binaryCode[7]) % 2;
+				
 				var bitWithError = 0;
 				for (var i = 1; i < 5; i++)
 					if (i != 3 && errors[i] != binaryCode[i])
@@ -70,16 +79,16 @@
 				if (bitWithError == 0 )
 					alert('Wow, your message haven\'t errors');
 
-				else if (bitWithError < 8)
+				else if (parity == thisParity)
 				{
-					binaryCode[bitWithError] = (binaryCode[bitWithError] + 1) % 2;
-					alert('Oh, i find and fixed one error in your message in ' + bitWithError + ' bytes');
+					alert('Sorry, but your message have too much errors:(');
+					return;	
 				}
 
 				else 
 				{
-					alert('Sorry, but your message have too much errors:(');
-					return;
+					binaryCode[bitWithError] = (binaryCode[bitWithError] + 1) % 2;
+					alert('Oh, i find and fixed one error in your message in ' + bitWithError + ' bytes');
 				}
 				
 				var resultString = [];
